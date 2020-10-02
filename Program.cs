@@ -18,66 +18,6 @@ namespace Version
     }
     class Program
     {
-        public static void Kaydet(int id, string ad, string soyad, string sehir, int bakiye)
-        {
-            NpgsqlConnection conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun");
-            conn.Open();
-            NpgsqlCommand comd = new NpgsqlCommand("insert into musteri (id,ad,soyad,sehir,bakiye) values ('" + id.ToString() + "','" + ad.ToString() + "','" + soyad.ToString() + "','" + sehir.ToString() + "','" + bakiye.ToString() + "') ", conn);
-            comd.ExecuteNonQuery();
-            conn.Close();
-        }
-        public static void VerileriGoster()
-        {
-            using var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun");
-            conn.Open();
-
-            // var sql = "select * from musteri where bakiye>2000 order by id";
-            using var comd = new NpgsqlCommand("select * from musteri where bakiye>100 order by id", conn);
-
-
-            NpgsqlDataReader reader = comd.ExecuteReader();
-            while (reader.Read())
-            {
-                Console.WriteLine($"{Int32.Parse(reader["id"].ToString())} {reader["ad"].ToString()} {reader["soyad"].ToString()} {reader["sehir"].ToString()} {Int32.Parse(reader["bakiye"].ToString())}");
-
-                int val = Int32.Parse(reader[0].ToString());
-                // Console.WriteLine(">>>"+val);
-            }
-        }
-        public static void Bul(int id)
-        {
-            NpgsqlConnection conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun");
-            conn.Open();
-
-            var sql = "select * from musteri ";
-            using var comd = new NpgsqlCommand(sql, conn);
-
-            NpgsqlDataReader reader = comd.ExecuteReader();
-
-            bool bulunduMu = false;
-            while (reader.Read())
-            {
-                
-                if (id == Int32.Parse(reader[0].ToString()))
-                {
-                    Console.Write("\nBulunan :");
-                    Console.WriteLine($"{Int32.Parse(reader["id"].ToString())} {reader["ad"].ToString()} {reader["soyad"].ToString()} {reader["sehir"].ToString()} {Int32.Parse(reader["bakiye"].ToString())}");
-                    bulunduMu = true;
-                    break;
-                }
-
-                // Console.WriteLine($"{Int32.Parse(reader["id"].ToString())} {reader["ad"].ToString()} {reader["soyad"].ToString()} {reader["sehir"].ToString()} {Int32.Parse(reader["bakiye"].ToString())}");
-
-                // int val = Int32.Parse(reader[0].ToString());
-                // // Console.WriteLine(">>>"+val);
-            }
-            if (!bulunduMu)
-            {
-                Console.WriteLine("Böyle bir arama bulunamdı.");
-            }
-            Console.WriteLine();
-
-        }
         public static void Main(string[] args)
         {
             Console.WriteLine();
@@ -118,20 +58,20 @@ namespace Version
                     Console.Write("-> Bakiyeniz :");
                     int bakiye = Convert.ToInt32(Console.ReadLine());
 
-                    Kaydet(id, ad, soyad, sehir, bakiye);
+                    Musteri.Kaydet(id, ad, soyad, sehir, bakiye);
                 }
                 else if (secim == 2)
                 {
                     Console.WriteLine("****Kayıtlı veriler******\n");
 
-                    VerileriGoster();
+                    Musteri.VerileriGoster();
                 }
                 else if (secim == 3)
                 {
                     Console.Write("Aramak için kişi noyu giriniz :");
                     int id = Convert.ToInt32(Console.ReadLine());
 
-                    Bul(id);
+                    Musteri.Bul(id);
                 }
 
                 // // var cs = "Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun";
