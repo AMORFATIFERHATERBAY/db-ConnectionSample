@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Npgsql;
 
+
 namespace Version
 {
     enum Islemler : byte
@@ -16,6 +17,7 @@ namespace Version
         Güncelle = 5,
         Çıkış = 6
     }
+
     class Program
     {
         public static void Main(string[] args)
@@ -30,8 +32,8 @@ namespace Version
                 foreach (var e in Enum.GetValues(typeof(Islemler)))
                 {
                     Console.WriteLine(string.Format("{0,-10} = {1}", e.ToString(), (byte)e));
-
                 }
+
 
                 Console.Write("\n-->İşleminizi seçiniz :");
                 secim = Convert.ToByte(Console.ReadLine());
@@ -40,11 +42,11 @@ namespace Version
                 if (secim == 1)
                 {
                     // Console.Clear();
-                    Console.WriteLine("\n*************************************");
-                    Console.WriteLine("****** Müşteri Kayıt Bilgileri ******");
-                    Console.WriteLine("*************************************\n");
+                    Console.WriteLine("\n*******************************************");
+                    Console.WriteLine("****** Müşteri Kayıt Bilgileri Giriş ******");
+                    Console.WriteLine("*******************************************\n");
                     Console.Write("-> Kişi no   :");
-                    int id = Convert.ToInt32(Console.ReadLine());
+                    int id = Convert.ToInt32    (Console.ReadLine());
 
                     Console.Write("-> Adınız    :");
                     string ad = Console.ReadLine();
@@ -52,7 +54,7 @@ namespace Version
                     Console.Write("-> Soyadınız :");
                     string soyad = Console.ReadLine();
 
-                    Console.Write("-> İliniz    :");
+                    Console.Write("-> İliniz    :") ;    
                     string sehir = Console.ReadLine();
 
                     Console.Write("-> Bakiyeniz :");
@@ -60,12 +62,14 @@ namespace Version
 
                     Musteri.Kaydet(id, ad, soyad, sehir, bakiye);
                 }
+
                 else if (secim == 2)
                 {
                     Console.WriteLine("****Kayıtlı veriler******\n");
 
                     Musteri.VerileriGoster();
                 }
+
                 else if (secim == 3)
                 {
                     Console.Write("Aramak için kişi noyu giriniz :");
@@ -73,6 +77,41 @@ namespace Version
 
                     Musteri.Bul(id);
                 }
+
+                else if (secim==4)
+                {
+                    Console.Write("\nSilinecek kişi noyu giriniz :");
+                    int id = Convert.ToInt32(Console.ReadLine());
+                    Musteri.Sil(id); 
+                }
+                else if (secim==5)
+                {
+                    Console.Write("Güncellenecek kişinin nosunu giriniz :");
+                    int id = Convert.ToInt32(Console.ReadLine());
+
+                    Musteri.Bul(id);
+
+                    Console.Write("-> Kişi no   :");
+                    int idYeni = Convert.ToInt32    (Console.ReadLine());
+
+                    Console.Write("-> Adınız    :");
+                    string ad = Console.ReadLine();
+
+                    Console.Write("-> Soyadınız :");
+                    string soyad = Console.ReadLine();
+
+                    Console.Write("-> İliniz    :") ;    
+                    string sehir = Console.ReadLine();
+
+                    Console.Write("-> Bakiyeniz :");
+                    int bakiye = Convert.ToInt32(Console.ReadLine());
+
+                    Musteri.Guncelle(id,idYeni,ad,soyad,sehir,bakiye);
+
+                    Musteri.VerileriGoster();
+
+                }
+
 
                 // // var cs = "Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun";
                 // // using var con = new NpgsqlConnection(cs);

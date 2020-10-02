@@ -34,6 +34,7 @@ namespace Version
                 int val = Int32.Parse(reader[0].ToString());
                 // Console.WriteLine(">>>"+val);
             }
+            
         }
         public static void Bul(int id)
         {
@@ -54,6 +55,7 @@ namespace Version
                     Console.Write("\nBulunan :");
                     Console.WriteLine($"{Int32.Parse(reader["id"].ToString())} {reader["ad"].ToString()} {reader["soyad"].ToString()} {reader["sehir"].ToString()} {Int32.Parse(reader["bakiye"].ToString())}");
                     bulunduMu = true;
+            
                     break;
                 }
 
@@ -66,7 +68,36 @@ namespace Version
             {
                 Console.WriteLine("Böyle bir arama bulunamdı.");
             }
+            conn.Close();
             Console.WriteLine();
+
+        }
+
+        public static void Sil(int id)
+        {
+            NpgsqlConnection conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun");
+            conn.Open();
+
+            using var comd = new NpgsqlCommand("delete from musteri where id =("+id+")", conn);
+        
+            conn.Close();
+            Console.WriteLine();
+
+            VerileriGoster();
+
+        }
+        public static void Guncelle(int idEski, int idYeni, string ad, string soyad,string sehir, int bakiye )
+        {
+            NpgsqlConnection conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun");
+            conn.Open();
+
+            using var comd = new NpgsqlCommand("update musteri set id='"+idYeni.ToString()+"',ad='"+ad.ToString()+"',soyad='"+soyad.ToString()+"',sehir='"+sehir.ToString()+"',bakiye='"+bakiye.ToString()+"' where id =("+idEski+")", conn);
+        
+            comd.ExecuteNonQuery();
+            conn.Close();
+            Console.WriteLine();
+
+            VerileriGoster();
 
         }
 
