@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using Npgsql;
 
 namespace Version
@@ -7,10 +10,11 @@ namespace Version
     enum Islemler : byte
     {
         Kaydet = 1,
-        Goruntule = 2,
-        Sıl = 3,
-        Guncelle = 4,
-        Cıkıs = 5
+        Göruntule = 2,
+        Bul = 3,
+        Sil = 4,
+        Güncelle = 5,
+        Çıkış = 6
     }
     class Program
     {
@@ -22,6 +26,58 @@ namespace Version
             comd.ExecuteNonQuery();
             conn.Close();
         }
+        public static void VerileriGoster()
+        {
+            using var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun");
+            conn.Open();
+
+            // var sql = "select * from musteri where bakiye>2000 order by id";
+            using var comd = new NpgsqlCommand("select * from musteri where bakiye>100 order by id", conn);
+
+
+            NpgsqlDataReader reader = comd.ExecuteReader();
+            while (reader.Read())
+            {
+                Console.WriteLine($"{Int32.Parse(reader["id"].ToString())} {reader["ad"].ToString()} {reader["soyad"].ToString()} {reader["sehir"].ToString()} {Int32.Parse(reader["bakiye"].ToString())}");
+
+                int val = Int32.Parse(reader[0].ToString());
+                // Console.WriteLine(">>>"+val);
+            }
+        }
+        public static void Bul(int id)
+        {
+            NpgsqlConnection conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun");
+            conn.Open();
+
+            var sql = "select * from musteri ";
+            using var comd = new NpgsqlCommand(sql, conn);
+
+            NpgsqlDataReader reader = comd.ExecuteReader();
+
+            bool bulunduMu = false;
+            while (reader.Read())
+            {
+                
+                if (id == Int32.Parse(reader[0].ToString()))
+                {
+                    Console.Write("\nBulunan :");
+                    Console.WriteLine($"{Int32.Parse(reader["id"].ToString())} {reader["ad"].ToString()} {reader["soyad"].ToString()} {reader["sehir"].ToString()} {Int32.Parse(reader["bakiye"].ToString())}");
+                    bulunduMu = true;
+                    break;
+                }
+
+                // Console.WriteLine($"{Int32.Parse(reader["id"].ToString())} {reader["ad"].ToString()} {reader["soyad"].ToString()} {reader["sehir"].ToString()} {Int32.Parse(reader["bakiye"].ToString())}");
+
+                // int val = Int32.Parse(reader[0].ToString());
+                // // Console.WriteLine(">>>"+val);
+            }
+            if (!bulunduMu)
+            {
+                Console.WriteLine("Böyle bir arama bulunamdı.");
+            }
+            Console.WriteLine();
+
+        }
         public static void Main(string[] args)
         {
             Console.WriteLine();
@@ -30,7 +86,7 @@ namespace Version
 
             do
             {
-                Console.Clear();
+                //Console.Clear();
                 foreach (var e in Enum.GetValues(typeof(Islemler)))
                 {
                     Console.WriteLine(string.Format("{0,-10} = {1}", e.ToString(), (byte)e));
@@ -63,6 +119,19 @@ namespace Version
                     int bakiye = Convert.ToInt32(Console.ReadLine());
 
                     Kaydet(id, ad, soyad, sehir, bakiye);
+                }
+                else if (secim == 2)
+                {
+                    Console.WriteLine("****Kayıtlı veriler******\n");
+
+                    VerileriGoster();
+                }
+                else if (secim == 3)
+                {
+                    Console.Write("Aramak için kişi noyu giriniz :");
+                    int id = Convert.ToInt32(Console.ReadLine());
+
+                    Bul(id);
                 }
 
                 // // var cs = "Host=localhost;Username=postgres;Password=Amorfati2020.;Database=dburun";
@@ -120,7 +189,7 @@ namespace Version
                 // {
                 //     Console.WriteLine("Bu tablo zaten var!");
                 // }
-            } while (secim != 5);
+            } while (secim != 6);
 
         }
     }
